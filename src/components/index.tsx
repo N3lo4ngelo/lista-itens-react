@@ -1,54 +1,65 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, Button, StyleSheet, SafeAreaView } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, Button, FlatList, StyleSheet } from 'react-native';
 
-export default function Timer() {
-  const [hora, setHora] = useState(new Date());
+export default function ListaDeItens() {
+  const [itens, setItens] = useState<string[]>([]);
+  const [novoItem, setNovoItem] = useState<string>('');
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setHora(new Date());
-    }, 1000); 
-
-    return () => clearInterval(intervalId); 
-  }, []);
-
-  const resetarHora = () => {
-    const novaHora = new Date();
-    novaHora.setMinutes(novaHora.getMinutes() - 10); 
-    setHora(novaHora);
+  const adicionarItem = () => {
+    if (novoItem.trim() !== '') {
+      setItens([...itens, novoItem]);
+      setNovoItem('');
+    }
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.relogioContainer}>
-        <Text style={styles.relogioTexto}>Hora Atual: {hora.toLocaleTimeString()}</Text>
+    <View style={styles.container}>
+      <Text style={styles.titulo}>Lista de Itens</Text>
+      <FlatList
+        data={itens}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item }) => <Text style={styles.item}>{item}</Text>}
+      />
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.textInput}
+          placeholder="Digite um novo item"
+          value={novoItem}
+          onChangeText={(text) => setNovoItem(text)}
+        />
+        <Button title="Adicionar" onPress={adicionarItem} />
       </View>
-      <View style={styles.botaoContainer}>
-        <Button title="Reset H em 10Min" onPress={resetarHora} />
-      </View>
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f0f8ff', 
-    alignItems: 'center',
-    justifyContent: 'center',
+    padding: 16,
+    backgroundColor: '#fff',
   },
-  relogioContainer: {
-    backgroundColor: 'lightblue', 
-    padding: 20,
-    borderRadius: 10,
-    marginBottom: 20,
-  },
-  relogioTexto: {
-    color: '#fff', 
+  titulo: {
     fontSize: 24,
     fontWeight: 'bold',
+    marginBottom: 16,
+    color: 'blue'
   },
-  botaoContainer: {
-    marginBottom: 20,
+  item: {
+    fontSize: 18,
+    marginBottom: 8,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  textInput: {
+    flex: 1,
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginRight: 8,
+    paddingHorizontal: 8,
+    backgroundColor: 'lightgray'
   },
 });

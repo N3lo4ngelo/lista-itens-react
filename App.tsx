@@ -1,6 +1,6 @@
-import Timer from "./src/components/index"; 
+import ListaItens from "./src/components/index"
 
 export default function App() {
   // return <Contador />
-  return <Timer/>
+  return <ListaItens/>
 }
